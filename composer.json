@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "nelexa/zip": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "POEM\\": "src/"
