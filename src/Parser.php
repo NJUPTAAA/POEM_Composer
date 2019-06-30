@@ -2,6 +2,8 @@
  
 namespace POEM;
 
+use \PhpZip\ZipFile;
+
 class Parser
 {
     private $poemRaw="{}";
@@ -18,7 +20,7 @@ class Parser
                 is_array(json_decode($string))))) ? true : false;
     }
 
-    public function parse($poemRaw, $type="auto", $resourceProc=null, $testCaseProc=null, $requirementProc=null)
+    public function parse($poemRaw, $type="auto")
     {
         $this->poemRaw=$poemRaw;
         if ($type=="auto") {
@@ -29,12 +31,15 @@ class Parser
             $ret=json_decode($poemRaw, true);
             if(!is_array($ret)) $ret=[];
         } elseif ($type=="poetry") {
-            //unzip it
+            $zipFile = new ZipFile();
+            $zipFile->openFromString($poemRaw);
+            $listFiles = $zipFile->getListFiles();
+            var_dump($listFiles);
         }
 
-        foreach($ret["problems"] as $prob) {
-            $requirementProc($prob["require"]);
-        }
+        // foreach($ret["problems"] as $prob) {
+        //     // main proc
+        // }
 
         return $ret;
     }
