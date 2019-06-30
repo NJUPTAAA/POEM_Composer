@@ -2,7 +2,7 @@
  
 namespace POEMParser;
 
-class POEMParser
+class Parser
 {
     private $poemRaw="{}";
 
@@ -29,7 +29,7 @@ class POEMParser
             $ret=json_decode($poemRaw, true);
             if(!is_array($ret)) $ret=[];
         } elseif ($type=="poetry") {
-            
+
         }
 
         return $ret;
