@@ -1,0 +1,61 @@
+{
+    "standard": "1.0",
+    "generator": "NOJ",
+    "url": "https://github.com/ZsgsDesign/NOJ",
+    "description": "This is a test A+B problem POEM file.",
+    "problems": [{
+        "title": "A+B Problem",
+        "require": {
+            "MathJax": true,
+            "Babel": {
+                "Core": true
+            }
+        },
+        "type": "OnlineJudge",
+        "resources": [{
+            "alias": "1",
+            "fixedName": false
+        }],
+        "timeLimit": {
+            "unit": "s",
+            "value": 1
+        },
+        "memoryLimit": {
+            "unit": "kb",
+            "value": 262144
+        },
+        "description": "Calculate a+b\r\n",
+        "input": "Two integer a,b (1<=a,b<=2)\r\n",
+        "output": "Output a+b\r\n",
+        "note": "**Q:** Where are the input and the output? \r\n\r\n**A:** Your program shall always read input from stdin (Standard Input) and write output to stdout (Standard Output). For example, you can use `scanf` in C or `cin` in C++ to read from stdin, and use `printf` in C or `cout` in C++ to write to stdout. \r\n\r\nYou shall not output any extra data to standard output other than that required by the problem, otherwise you will get a **`Wrong Answer`**. \r\n\r\nUser programs are not allowed to open and read from\/write to files. You will get a **`Runtime Error`** or a **`Wrong Answer`** if you try to do so. \r\n\r\nHere is a sample solution using `C++\/G++` : \r\n\r\n```\r\n#include <iostream>\r\n\r\nusing namespace std;\r\n\r\nint main()\r\n{\r\n    int a,b;\r\n    cin >> a >> b;\r\n    cout << a+b << endl;\r\n    return 0;\r\n}\r\n```\r\n\r\nIt's important that the return type of `main()` must be int when you use `G++\/GCC`, or you may get compile error. \r\n\r\nHere is a sample solution using `C\/GCC` : \r\n\r\n```\r\n#include <stdio.h>\r\n\r\nint main()\r\n{\r\n    int a,b;\r\n    scanf(\"%d %d\",&a, &b);\r\n    printf(\"%d\\n\",a+b);\r\n    return 0;\r\n}\r\n```\r\n\r\nHere is a sample solution using `Java` : \r\n\r\n```\r\nimport java.io.*;\r\nimport java.util.*;\r\npublic class Main\r\n{\r\n    public static void main(String args[]) throws Exception\r\n    {\r\n        Scanner cin=new Scanner(System.in);\r\n        int a=cin.nextInt(),b=cin.nextInt();\r\n        System.out.println(a+b);\r\n    }\r\n}\r\n```\r\n\r\nThings may be quite messy with Python and frankly I don't like it but... Anyway, here is a sample solution using `Python 3` : \r\n\r\n```\r\nprint(sum(int(x) for x in input().split(' ')))\r\n```\r\n\r\nHere is a sample solution using `Python 2` : \r\n\r\n```\r\nprint sum(int(x) for x in raw_input().split(' '))\r\n```",
+        "source": {
+            "url": false,
+            "name": false
+        },
+        "sample": [{
+            "input": "1 2\n",
+            "output": "3\n"
+        }],
+        "extra": {
+            "markdown": true,
+            "forceRaw": true,
+            "partial": true,
+            "totScore": 1
+        },
+        "testCases": [{
+            "input": "1 2\n",
+            "output": "3\n"
+        }, {
+            "input": "4 5\n",
+            "output": "9\n"
+        }, {
+            "input": "6 7\n",
+            "output": "13\n"
+        }],
+        "specialJudge": false,
+        "solution": [{
+            "locde": "cpp",
+            "source": "#include <iostream>\r\n\r\nusing namespace std;\r\n\r\nint main()\r\n{\r\n    int a,b;\r\n    cin >> a >> b;\r\n    cout << a+b << endl;\r\n    return 0;\r\n}"
+        }]
+    }]
+}

@@ -34,7 +34,9 @@ class Parser
             $zipFile = new ZipFile();
             $zipFile->openFromString($poemRaw);
             $listFiles = $zipFile->getListFiles();
-            var_dump($listFiles);
+            $contents = $zipFile[$listFiles[0]];
+            $ret=json_decode($contents, true);
+            if(!is_array($ret)) $ret=[];
         }
 
         // foreach($ret["problems"] as $prob) {
