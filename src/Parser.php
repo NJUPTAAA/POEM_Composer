@@ -1,6 +1,6 @@
 <?php
  
-namespace POEMParser;
+namespace POEM;
 
 class Parser
 {
@@ -18,7 +18,7 @@ class Parser
                 is_array(json_decode($string))))) ? true : false;
     }
 
-    public function parse($poemRaw, $type="auto", $resourceProc=null, $testCaseProc=null)
+    public function parse($poemRaw, $type="auto", $resourceProc=null, $testCaseProc=null, $requirementProc=null)
     {
         $this->poemRaw=$poemRaw;
         if ($type=="auto") {
@@ -29,7 +29,11 @@ class Parser
             $ret=json_decode($poemRaw, true);
             if(!is_array($ret)) $ret=[];
         } elseif ($type=="poetry") {
+            //unzip it
+        }
 
+        foreach($ret["problems"] as $prob) {
+            $requirementProc($prob["require"]);
         }
 
         return $ret;

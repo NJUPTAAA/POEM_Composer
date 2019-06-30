@@ -1,0 +1,14 @@
+{
+    "name": "njuptaaa/poem",
+    "description": "parser for Problem-Oriented Exchangeable Mechanism.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ZsgsDesign",
+            "email": "zsgsdesign@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
