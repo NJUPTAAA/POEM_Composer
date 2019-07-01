@@ -1,4 +1,5 @@
 {
+    "version": "0.0.1",
     "name": "njuptaaa/poem",
     "description": "parser for Problem-Oriented Exchangeable Mechanism.",
     "type": "library",
