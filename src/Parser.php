@@ -7,6 +7,7 @@ use \PhpZip\ZipFile;
 class Parser
 {
     private $poemRaw="{}";
+    private $supportStandard=["1.0"];
 
     public function poemRaw()
     {
@@ -38,10 +39,6 @@ class Parser
             $ret=json_decode($contents, true);
             if(!is_array($ret)) $ret=[];
         }
-
-        // foreach($ret["problems"] as $prob) {
-        //     // main proc
-        // }
 
         return $ret;
     }
