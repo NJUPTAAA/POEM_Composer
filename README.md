@@ -1,2 +1,2 @@
-# POEM_Composer
+# POEM Composer
 Composer Package for POEM
