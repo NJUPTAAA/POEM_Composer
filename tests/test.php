@@ -10,5 +10,5 @@ $poetryRaw=file_get_contents(__DIR__ . "/A+B.poetry");
 $problems=$parser->parseStream($poetryRaw, "poetry")->getProblemList()["problems"];
 
 foreach($problems as $prob){
-    var_dump($prob->getProblemDetails());
+    var_dump($prob->getSTDs());
 }
