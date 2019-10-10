@@ -2,17 +2,14 @@
  
 namespace POEM;
 
+use Exception;
 use \PhpZip\ZipFile;
 
 class Parser
 {
-    private $poemRaw="{}";
     private $supportStandard=["1.0"];
-
-    public function poemRaw()
-    {
-        return $this->poemRaw;
-    }
+    private $path=null;
+    private $type=null;
 
     private function isJson($string)
     {
@@ -21,25 +18,76 @@ class Parser
                 is_array(json_decode($string))))) ? true : false;
     }
 
-    public function parse($poemRaw, $type="auto")
+    private function getFile($path)
     {
-        $this->poemRaw=$poemRaw;
-        if ($type=="auto") {
-            $type=$this->isJson($this->poemRaw)?"poem":"poetry";
-        }
+        $file=file_get_contents($path);
+        if($file===false) throw new Exception("$path: File Not Found");
+        return $file;
+    }
 
-        if ($type=="poem") {
-            $ret=json_decode($poemRaw, true);
-            if(!is_array($ret)) $ret=[];
-        } elseif ($type=="poetry") {
-            $zipFile = new ZipFile();
-            $zipFile->openFromString($poemRaw);
-            $listFiles = $zipFile->getListFiles();
-            $contents = $zipFile[$listFiles[0]];
-            $ret=json_decode($contents, true);
-            if(!is_array($ret)) $ret=[];
-        }
+    public function parseFile($poemFile, $type)
+    {
+        parseStream($this->getFile($poemFile), $type);
+    }
 
-        return $ret;
+    public function parseStream($poemStream, $type)
+    {
+        if(!in_array($this->type,['poetry','poem'])) throw new Exception("Unsupported Type"); 
+        $this->type=$type;
+        $tmpFolder=__DIR__."/tmp/NOJ".time();
+        mkdir($tmpFolder, 0700, true);
+        $zipFile = new ZipFile();
+        $zipFile->openFromString($poemStream)->extractTo($tmpFolder);
+        $this->path=$tmpFolder;
+        if(!isJson($this->getFile("$this->path/main.json"))) throw new Exception("Malformed Files");
+
+        return $this;
+    }
+
+    public function getProblemList()
+    {
+        if($this->type!="poetry") throw new Exception("Unsupported Method");
+        // get problem list, array with poem parser object
+    }
+
+    public function getProblemDetails()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem details
+    }
+
+    public function getTestcases()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem testcases
+    }
+
+    public function getSTDs()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem stds
+    }
+
+    public function getSPJ()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem spj
+    }
+
+    public function getResource()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem resource
+    }
+
+    public function getResources()
+    {
+        if($this->type!="poem") throw new Exception("Unsupported Method");
+        // get problem resources
+    }
+
+    public function terminate()
+    {
+        
     }
 }
