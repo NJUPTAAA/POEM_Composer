@@ -7,4 +7,8 @@ $parser=new Parser();
 
 $poetryRaw=file_get_contents(__DIR__ . "/A+B.poetry");
 
-var_dump($parser->parse($poetryRaw));
+$problems=$parser->parseStream($poetryRaw, "poetry")->getProblemList()["problems"];
+
+foreach($problems as $prob){
+    var_dump($prob->getProblemDetails());
+}

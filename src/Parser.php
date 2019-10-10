@@ -18,6 +18,24 @@ class Parser
                 is_array(json_decode($string))))) ? true : false;
     }
 
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    private function createTmpFolder($tries=5)
+    {
+        $tmpFolder=__DIR__."/tmp/NOJ".time().$this->generateRandomString(6);
+        if(is_dir($tmpFolder)) return createTmpFolder(--$tries);
+        mkdir($tmpFolder, 0700, true);
+        return $tmpFolder;
+    }
+
     private function getFile($path)
     {
         $file=file_get_contents($path);
@@ -27,19 +45,18 @@ class Parser
 
     public function parseFile($poemFile, $type)
     {
-        parseStream($this->getFile($poemFile), $type);
+        return $this->parseStream($this->getFile($poemFile), $type);
     }
 
     public function parseStream($poemStream, $type)
     {
-        if(!in_array($this->type,['poetry','poem'])) throw new Exception("Unsupported Type"); 
+        if(!in_array($type,['poetry','poem'])) throw new Exception("Unsupported Type"); 
         $this->type=$type;
-        $tmpFolder=__DIR__."/tmp/NOJ".time();
-        mkdir($tmpFolder, 0700, true);
+        $tmpFolder=$this->createTmpFolder();
         $zipFile = new ZipFile();
         $zipFile->openFromString($poemStream)->extractTo($tmpFolder);
         $this->path=$tmpFolder;
-        if(!isJson($this->getFile("$this->path/main.json"))) throw new Exception("Malformed Files");
+        if(!$this->isJson($this->getFile("$this->path/main.json"))) throw new Exception("Malformed Files");
 
         return $this;
     }
@@ -47,13 +64,19 @@ class Parser
     public function getProblemList()
     {
         if($this->type!="poetry") throw new Exception("Unsupported Method");
-        // get problem list, array with poem parser object
+        $list=json_decode($this->getFile("$this->path/main.json"),true);
+        $problems=$list["problems"];
+        $list["problems"]=[];
+        foreach($problems as $problem){
+            $list["problems"][]=(new Parser())->parseFile("$this->path/$problem", "poem");
+        }
+        return $list;
     }
 
     public function getProblemDetails()
     {
         if($this->type!="poem") throw new Exception("Unsupported Method");
-        // get problem details
+        return json_decode($this->getFile("$this->path/main.json"), true);
     }
 
     public function getTestcases()
@@ -88,6 +111,6 @@ class Parser
 
     public function terminate()
     {
-        
+
     }
 }
