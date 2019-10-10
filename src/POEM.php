@@ -52,13 +52,18 @@ class POEM
                 "producer" => [
                     "name" => "POEM_Composer",
                     "url" => "https://github.com/NJUPTAAA/POEM_Composer",
-                    "version" => "1.1.0"
+                    "version" => Utils::VERSION
                 ]
             ],
             "title" => "Untitled Problem",
-            "require" => [],
+            "require" => [
+                "MathJax" => true
+            ],
             "category" => "OnlineJudge",
             "resourcesFolder" => "resources",
+            "testCasesFolder" => "testcases",
+            "stdFolder" => "stds",
+            "spjFolder" => "spj",
             "timeLimit" => 1000,
             "memoryLimit" => 262144,
             "description" => null,
@@ -76,8 +81,11 @@ class POEM
                 "partial" => true,
                 "totScore" => 0
             ],
-            "testCasesFolder" => "testcases",
-            "specialJudge" => false,
+            "specialJudge" => [
+                "enable" => false,
+                "lcode" => null,
+                "source" => null,
+            ],
             "solutions" => []
         ];
         if (is_null($workspace)) {
@@ -94,19 +102,27 @@ class POEM
     {
         $this->rawJSON = $this->data = json_decode($json, true); // limit field
         foreach ($this->data['solutions'] as &$solution) {
-            $solution['source'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $solution['source']);
+            $solution['source'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->stdFolder . DIRECTORY_SEPARATOR . $solution['source']);
         }
-        $this->data['description'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['description']);
-        $this->data['input'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['input']);
-        $this->data['output'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['output']);
-        $this->data['note'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['note']);
-        //spj
+        $this->data['description'] = $this->data['input'] = $this->data['output'] = $this->data['note'] = null;
+        if($this->rawJSON['description']) $this->data['description'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['description']);
+        if($this->rawJSON['input']) $this->data['input'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['input']);
+        if($this->rawJSON['output']) $this->data['output'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['output']);
+        if($this->rawJSON['note']) $this->data['note'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->rawJSON['note']);
+        if ($this->data['specialJudge']['enable']) {
+            $this->data['specialJudge']['source'] = Utils::getFile($this->workspace . DIRECTORY_SEPARATOR . $this->spjFolder . DIRECTORY_SEPARATOR . $this->rawJSON['specialJudge']['source']);
+        }
         return $this;
     }
 
     public function getTestCasesPackage()
     {
-        return (new ZipFile())->addDir($this->path . DIRECTORY_SEPARATOR . $this->testCasesFolder);
+        return (new ZipFile())->addDir($this->workspace . DIRECTORY_SEPARATOR . $this->testCasesFolder);
+    }
+
+    public function getResourcesPackage()
+    {
+        return (new ZipFile())->addDir($this->workspace . DIRECTORY_SEPARATOR . $this->resourcesFolder);
     }
 
     public function close()

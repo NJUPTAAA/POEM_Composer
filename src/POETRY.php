@@ -54,7 +54,7 @@ class POETRY
                 "producer" => [
                     "name" => "POEM_Composer",
                     "url" => "https://github.com/NJUPTAAA/POEM_Composer",
-                    "version" => "1.1.0"
+                    "version" => Utils::VERSION
                 ]
             ],
             "description" => "",
