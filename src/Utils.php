@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace POEM;
 
 use Exception;
@@ -10,9 +10,7 @@ class Utils
 {
     public static function isJson($string)
     {
-        return ((is_string($string) &&
-                (is_object(json_decode($string)) ||
-                is_array(json_decode($string))))) ? true : false;
+        return ((is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string))))) ? true : false;
     }
 
     public static function generateRandomString($length = 10)
@@ -26,18 +24,18 @@ class Utils
         return $randomString;
     }
 
-    public static function createTmpFolder($tries=5)
+    public static function createTmpFolder($tries = 5)
     {
-        $tmpFolder=__DIR__."/tmp/NOJ".time().self::generateRandomString(6);
-        if(is_dir($tmpFolder)) return createTmpFolder(--$tries);
+        $tmpFolder = __DIR__ . "/tmp/NOJ" . time() . self::generateRandomString(6);
+        if (is_dir($tmpFolder)) return createTmpFolder(--$tries);
         mkdir($tmpFolder, 0700, true);
         return $tmpFolder;
     }
 
     public static function getFile($path)
     {
-        $file=file_get_contents($path);
-        if($file===false) throw new Exception("$path: File Not Found");
+        $file = file_get_contents($path);
+        if ($file === false) throw new Exception("$path: File Not Found");
         return $file;
     }
 
@@ -45,8 +43,8 @@ class Utils
     {
         $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
         $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-        foreach($files as $file) {
-            if ($file->isDir()){
+        foreach ($files as $file) {
+            if ($file->isDir()) {
                 rmdir($file->getRealPath());
             } else {
                 unlink($file->getRealPath());
