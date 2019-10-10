@@ -9,6 +9,7 @@ class POEM
 {
     private $workspace=null;
     private $rawJSON=null;
+    private $fillable=['title','category','timeLimit','memoryLimit'];
     private $data=[
         "standard"=> "1.0",
         "generator"=> [
@@ -18,8 +19,8 @@ class POEM
                 "version"=> ""
             ],
             "producer"=> [
-                "name"=> "POEM_NPM",
-                "url"=> "https://github.com/NJUPTAAA/POEM_NPM",
+                "name"=> "POEM_Composer",
+                "url"=> "https://github.com/NJUPTAAA/POEM_Composer",
                 "version"=> "1.1.0"
             ]
         ],
@@ -29,31 +30,24 @@ class POEM
         "resourcesFolder"=> "resources",
         "timeLimit"=> 1000,
         "memoryLimit"=> 262144,
-        "description"=> "description.md",
-        "input"=> "input.md",
-        "output"=> "output.md",
-        "note"=> "note.md",
+        "description"=> null,
+        "input"=> null,
+        "output"=> null,
+        "note"=> null,
         "source"=> [
             "url"=> false,
             "name"=> false
         ],
-        "sample"=> [
-            "input"=> "1 2\n",
-            "output"=> "3\n",
-            "note"=> null
-        ],
+        "sample"=> [],
         "extra"=> [
             "markdown"=> true,
             "forceRaw"=> false,
             "partial"=> true,
-            "totScore"=> 3
+            "totScore"=> 0
         ],
         "testCasesFolder"=> "testcases",
         "specialJudge"=> false,
-        "solutions"=> [
-            "locde"=> "cpp",
-            "source"=> "stds/std.cpp"
-        ]
+        "solutions"=> []
     ];
 
     public function __toString()
@@ -75,9 +69,11 @@ class POEM
         return null;
     }
 
-    public function __put($name)
+    public function __set($name, $value)
     {
-
+        if(in_array($name,$this->fillable)){
+            $this->data[$name]=$value;
+        }
     }
 
     public function __construct($workspace=null)

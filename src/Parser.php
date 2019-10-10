@@ -26,7 +26,7 @@ class Parser
         $this->path=$tmpFolder;
         $json=Utils::getFile("$this->path/main.json");
         if(!Utils::isJson($json)) throw new Exception("Malformed Files");
-        return (new POEM($this->path))->importJSON($json);
+        return $type=='poem'?(new POEM($this->path))->importJSON($json):(new POETRY($this->path))->importJSON($json);
     }
 
     public function terminate()
