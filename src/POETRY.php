@@ -68,7 +68,7 @@ class POETRY
 
     public function importJSON($json)
     {
-        $this->rawJSON=$this->data=json_decode($json);
+        $this->rawJSON=$this->data=json_decode($json, true); // limit fields
         $problems=$this->rawJSON["problems"];
         $this->data["problems"]=[];
         foreach($problems as $problem){
@@ -92,5 +92,13 @@ class POETRY
     public function removeProblem()
     {
 
+    }
+
+    public function close()
+    {
+        foreach($this->data['problems'] as $problem){
+            $problem->close();
+        }
+        Utils::removeDir($this->workspace);
     }
 }

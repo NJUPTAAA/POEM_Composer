@@ -8,47 +8,9 @@ use \PhpZip\ZipFile;
 class POEM
 {
     private $workspace=null;
-    private $rawJSON=null;
+    private $rawJSON=[];
     private $fillable=['title','category','timeLimit','memoryLimit'];
-    private $data=[
-        "standard"=> "1.0",
-        "generator"=> [
-            "creator"=>[
-                "name"=> "",
-                "url"=> "",
-                "version"=> ""
-            ],
-            "producer"=> [
-                "name"=> "POEM_Composer",
-                "url"=> "https://github.com/NJUPTAAA/POEM_Composer",
-                "version"=> "1.1.0"
-            ]
-        ],
-        "title"=> "Untitled Problem",
-        "require"=> [],
-        "category"=> "OnlineJudge",
-        "resourcesFolder"=> "resources",
-        "timeLimit"=> 1000,
-        "memoryLimit"=> 262144,
-        "description"=> null,
-        "input"=> null,
-        "output"=> null,
-        "note"=> null,
-        "source"=> [
-            "url"=> false,
-            "name"=> false
-        ],
-        "sample"=> [],
-        "extra"=> [
-            "markdown"=> true,
-            "forceRaw"=> false,
-            "partial"=> true,
-            "totScore"=> 0
-        ],
-        "testCasesFolder"=> "testcases",
-        "specialJudge"=> false,
-        "solutions"=> []
-    ];
+    private $data=[];
 
     public function __toString()
     {
@@ -78,6 +40,45 @@ class POEM
 
     public function __construct($workspace=null)
     {
+        $this->rawJSON=$this->data=[
+            "standard"=> "1.0",
+            "generator"=> [
+                "creator"=>[
+                    "name"=> "",
+                    "url"=> "",
+                    "version"=> ""
+                ],
+                "producer"=> [
+                    "name"=> "POEM_Composer",
+                    "url"=> "https://github.com/NJUPTAAA/POEM_Composer",
+                    "version"=> "1.1.0"
+                ]
+            ],
+            "title"=> "Untitled Problem",
+            "require"=> [],
+            "category"=> "OnlineJudge",
+            "resourcesFolder"=> "resources",
+            "timeLimit"=> 1000,
+            "memoryLimit"=> 262144,
+            "description"=> null,
+            "input"=> null,
+            "output"=> null,
+            "note"=> null,
+            "source"=> [
+                "url"=> false,
+                "name"=> false
+            ],
+            "sample"=> [],
+            "extra"=> [
+                "markdown"=> true,
+                "forceRaw"=> false,
+                "partial"=> true,
+                "totScore"=> 0
+            ],
+            "testCasesFolder"=> "testcases",
+            "specialJudge"=> false,
+            "solutions"=> []    
+        ];
         if(is_null($workspace)){
             $this->workspace=Utils::createTmpFolder();
             mkdir($this->workspace.DIRECTORY_SEPARATOR.'resources', 0700, true);
@@ -90,67 +91,25 @@ class POEM
 
     public function importJSON($json)
     {
-        $this->rawJSON=$json;
-        $this->data=json_decode($json);
+        $this->rawJSON=$this->data=json_decode($json, true); // limit field
+        foreach($this->data['solutions'] as &$solution){
+            $solution['source']=Utils::getFile($this->workspace.DIRECTORY_SEPARATOR.$solution['source']);
+        }
+        $this->data['description']=Utils::getFile($this->workspace.DIRECTORY_SEPARATOR.$this->rawJSON['description']);
+        $this->data['input']=Utils::getFile($this->workspace.DIRECTORY_SEPARATOR.$this->rawJSON['input']);
+        $this->data['output']=Utils::getFile($this->workspace.DIRECTORY_SEPARATOR.$this->rawJSON['output']);
+        $this->data['note']=Utils::getFile($this->workspace.DIRECTORY_SEPARATOR.$this->rawJSON['note']);
+        //spj
         return $this;
     }
 
-    
-    public function getProblemList()
+    public function getTestCasesPackage()
     {
-        if($this->type!="poetry") throw new Exception("Unsupported Method");
-        $list=json_decode(Utils::getFile("$this->path/main.json"),true);
-        $problems=$list["problems"];
-        $list["problems"]=[];
-        foreach($problems as $problem){
-            $list["problems"][]=(new Parser())->parseFile("$this->path/$problem", "poem");
-        }
-        return $list;
+        return (new ZipFile())->addDir($this->path.DIRECTORY_SEPARATOR.$this->testCasesFolder);
     }
 
-    public function getProblemDetails()
+    public function close()
     {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        if(is_null($this->rawJSON)){
-            $this->rawJSON=json_decode(Utils::getFile("$this->path/main.json"), true);
-        }
-        return $this->rawJSON;
-    }
-
-    public function getTestCasesZip()
-    {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        // returns ZipFile instance
-        return (new ZipFile())->addDir($this->path.DIRECTORY_SEPARATOR.$this->getProblemDetails()['testCasesFolder']);
-    }
-
-    public function getSTDs()
-    {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        if(is_null($this->solution)){
-            $this->solution=$this->getProblemDetails()['solution'];
-            foreach($this->solution as &$solution){
-                $solution['source']=Utils::getFile($this->path.DIRECTORY_SEPARATOR.$solution['source']);
-            }
-        }
-        return $this->solution;
-    }
-
-    public function getSPJ()
-    {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        // get problem spj
-    }
-
-    public function getResource()
-    {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        // get problem resource
-    }
-
-    public function getResources()
-    {
-        if($this->type!="poem") throw new Exception("Unsupported Method");
-        // get problem resources
+        Utils::removeDir($this->workspace);
     }
 }

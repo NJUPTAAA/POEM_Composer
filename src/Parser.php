@@ -28,9 +28,4 @@ class Parser
         if(!Utils::isJson($json)) throw new Exception("Malformed Files");
         return $type=='poem'?(new POEM($this->path))->importJSON($json):(new POETRY($this->path))->importJSON($json);
     }
-
-    public function terminate()
-    {
-        Utils::removeDir($this->path);
-    }
 }

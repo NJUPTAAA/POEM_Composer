@@ -1,14 +1,14 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/autoload.php';
 
-use POEM\Parser;
+    use POEM\Parser;
 
-$parser=new Parser();
+    $parser=new Parser();
 
-$poetryRaw=file_get_contents(__DIR__ . "/A+B.poetry");
+    $poetry=$parser->parseFile(__DIR__ . "/A+B.poetry", "poetry");
 
-$problems=$parser->parseStream($poetryRaw, "poetry")->getProblemList()["problems"];
+    foreach($poetry->problems as $prob){
+        var_dump($prob->description);
+    }
 
-foreach($problems as $prob){
-    var_dump($prob->getSTDs());
-}
+    $poetry->close();
