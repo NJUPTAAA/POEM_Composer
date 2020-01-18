@@ -28,8 +28,9 @@ class Utils
 
     public static function createTmpFolder($tries = 5)
     {
+        if($tries == 0) return false;
         $tmpFolder = __DIR__ . "/tmp/NOJ" . time() . self::generateRandomString(6);
-        if (is_dir($tmpFolder)) return createTmpFolder(--$tries);
+        if (is_dir($tmpFolder)) return self::createTmpFolder(--$tries);
         mkdir($tmpFolder, 0700, true);
         return $tmpFolder;
     }
